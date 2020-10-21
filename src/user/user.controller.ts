@@ -6,8 +6,13 @@ import {
   HttpException,
   HttpStatus,
   Post,
+  Req,
 } from '@nestjs/common';
 import { ApiHeader, ApiResponse } from '@nestjs/swagger';
+import { Request } from 'express';
+import { decode } from 'punycode';
+
+import { verify } from '../common/functions';
 import { createUserDTO } from './dto/user.dto';
 import { UserService } from './user.service';
 
@@ -37,10 +42,13 @@ export class UserController {
     name: 'access-token',
     description: 'Access token',
   })
-  async getDetail(@Headers() headers: any) {
+  async getDetail(@Headers() headers: any, @Req() req: Request) {
     const accessToken = headers['access-token'];
+
+    const decoded = verify(accessToken);
+    const { username } = decoded;
     try {
-      return await this.userService.getDetail(accessToken);
+      return await this.userService.getDetail(username);
     } catch (error) {
       throw new HttpException(error.message, error.status);
     }

@@ -1,17 +1,15 @@
 import {
-  ClassSerializerInterceptor,
   HttpException,
   HttpStatus,
-  Injectable,
-  UseInterceptors,
+  Injectable
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
-
+import { Repository } from 'typeorm';
 import { hash } from '../common/functions';
 import { User } from '../entities/user.entity';
 import { createUserDTO, getUserDTO } from './dto/user.dto';
+
 
 @Injectable()
 export class UserService {
