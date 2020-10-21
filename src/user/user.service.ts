@@ -1,6 +1,7 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { hash } from '../common/functions';
 import { User } from '../entities/user.entity';
 import { createUserDTO } from './dto/user.dto';
 
@@ -9,11 +10,25 @@ export class UserService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
-  create(createUserDTO: createUserDTO): Promise<User> {
-    const user = new User();
-    user.username = createUserDTO.username;
-    user.password = createUserDTO.password;
 
-    return this.userRepository.save(user);
+  async create(createUserDTO: createUserDTO) {
+    const user = new User();
+    const { username, password } = createUserDTO;
+
+    const existed = await this.find(username);
+    if (existed.length) throw Error('Username already exist');
+
+    try {
+      const hashPassword = hash(password);
+      [user.username, user.password] = [username, hashPassword];
+    } catch (error) {
+      throw Error(error);
+    }
+
+    return await this.userRepository.save(user);
+  }
+
+  async find(username: string) {
+    return await this.userRepository.find({ username: username });
   }
 }

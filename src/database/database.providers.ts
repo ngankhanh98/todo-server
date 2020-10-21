@@ -9,5 +9,5 @@ export const databaseProvider = TypeOrmModule.forRoot({
   entities: ['"dist/**/*.entity{.ts,.js}"'],
   synchronize: true,
   autoLoadEntities: true,
-  keepConnectionAlive: true,
+  // keepConnectionAlive: true,
 });
