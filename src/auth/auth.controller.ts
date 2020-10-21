@@ -1,13 +1,12 @@
-import { Body, Controller, HttpStatus, Post } from '@nestjs/common';
 import {
-  ApiAcceptedResponse,
-  ApiBasicAuth,
-  ApiCreatedResponse,
-  ApiDefaultResponse,
-  ApiOkResponse,
-  ApiResponse,
-  ApiUnauthorizedResponse,
-} from '@nestjs/swagger';
+  Body,
+  Catch,
+  Controller,
+  HttpException,
+  HttpStatus,
+  Post,
+} from '@nestjs/common';
+
 import { AuthService } from './auth.service';
 import { authDTO } from './dto/auth.dto';
 
@@ -16,15 +15,13 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post()
-  @ApiCreatedResponse({
-    status: HttpStatus.CREATED,
-    description: 'Authenticated',
-  })
-  @ApiUnauthorizedResponse({
-    status: HttpStatus.UNAUTHORIZED,
-    description: 'Unauthenticated',
-  })
   async login(@Body() user: authDTO) {
-    return await this.authService.login(user);
+    try {
+      const isValid = await this.authService.validateUser(user);
+      if (isValid) return await this.authService.login(user);
+      throw new HttpException('Password wrong', HttpStatus.FORBIDDEN);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }
