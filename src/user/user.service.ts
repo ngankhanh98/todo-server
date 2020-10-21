@@ -1,9 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ClassSerializerInterceptor,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UseInterceptors,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { plainToClass } from 'class-transformer';
+
 import { hash } from '../common/functions';
 import { User } from '../entities/user.entity';
-import { createUserDTO } from './dto/user.dto';
+import { createUserDTO, getUserDTO } from './dto/user.dto';
 
 @Injectable()
 export class UserService {
@@ -11,25 +19,39 @@ export class UserService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
 
-  async create(createUserDTO: createUserDTO) {
+  public async create(createUserDTO: createUserDTO) {
     const user = new User();
     const { username, password, fullname, email } = createUserDTO;
 
     const existed = await this.find(username);
-    if (existed.length) throw Error('Username already exist');
-
-    try {
-      const hashPassword = hash(password);
-      user.password = hashPassword;
-      [user.username, user.fullname, user.email] = [username, fullname, email];
-    } catch (error) {
-      throw Error(error);
+    if (!existed.length) {
+      try {
+        const hashPassword = hash(password);
+        user.password = hashPassword;
+        [user.username, user.fullname, user.email, user.password] = [
+          username,
+          fullname,
+          email,
+          hashPassword,
+        ];
+        return await this.userRepository.save(user);
+      } catch (error) {
+        throw new HttpException(
+          error.message,
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
     }
 
-    return await this.userRepository.save(user);
+    throw new HttpException('Username already exist', HttpStatus.CONFLICT);
   }
 
-  async find(username: string) {
+  public async getDetail(username): Promise<getUserDTO> {
+    const user = await this.find(username);
+    return plainToClass(getUserDTO, user[0]);
+  }
+
+  private async find(username: string) {
     return await this.userRepository.find({ username: username });
   }
 }

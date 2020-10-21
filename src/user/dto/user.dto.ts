@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Exclude } from 'class-transformer';
 
 export class createUserDTO {
   @ApiProperty()
@@ -14,10 +15,13 @@ export class createUserDTO {
   email: string;
 }
 
-
-export class getUserInfoDTO {
+export class getUserDTO {
   @ApiProperty()
   username: string;
+
+  @Exclude()
+  @ApiProperty()
+  password: string;
 
   @ApiProperty()
   fullname: string;

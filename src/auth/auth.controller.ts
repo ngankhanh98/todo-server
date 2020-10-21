@@ -1,6 +1,5 @@
 import {
   Body,
-  Catch,
   Controller,
   HttpException,
   HttpStatus,
