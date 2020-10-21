@@ -1,20 +1,19 @@
-import { Controller, HttpStatus, Post, Req, Res } from '@nestjs/common';
+import { Body, Controller, HttpStatus, Post, Req, Res } from '@nestjs/common';
+import { ApiParam, ApiResponse } from '@nestjs/swagger';
 import { Request, Response } from 'express';
+import { createUserDTO } from './dto/user.dto';
 import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
-  constructor(private userController: UserService) {}
-  
-  @Post()
-  async register(@Req() req: Request, @Res() res: Response) {
-    const { username, password } = req.body;
+  constructor(private userService: UserService) {}
 
-    try {
-      await this.userController.create({ username, password });
-      res.status(HttpStatus.CREATED).json('success');
-    } catch (error) {
-      res.status(HttpStatus.UNPROCESSABLE_ENTITY).send(error.message)
-    }
+  @Post()
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'Create success',
+  })
+  async register(@Body() user: createUserDTO) {
+    return await this.userService.create(user);
   }
 }
