@@ -13,14 +13,15 @@ export class UserService {
 
   async create(createUserDTO: createUserDTO) {
     const user = new User();
-    const { username, password } = createUserDTO;
+    const { username, password, fullname, email } = createUserDTO;
 
     const existed = await this.find(username);
     if (existed.length) throw Error('Username already exist');
 
     try {
       const hashPassword = hash(password);
-      [user.username, user.password] = [username, hashPassword];
+      user.password = hashPassword;
+      [user.username, user.fullname, user.email] = [username, fullname, email];
     } catch (error) {
       throw Error(error);
     }

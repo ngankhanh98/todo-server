@@ -1,6 +1,5 @@
-import { Body, Controller, HttpStatus, Post, Req, Res } from '@nestjs/common';
-import { ApiParam, ApiResponse } from '@nestjs/swagger';
-import { Request, Response } from 'express';
+import { Body, Controller, HttpStatus, Post } from '@nestjs/common';
+import { ApiForbiddenResponse, ApiOkResponse } from '@nestjs/swagger';
 import { createUserDTO } from './dto/user.dto';
 import { UserService } from './user.service';
 
@@ -9,9 +8,13 @@ export class UserController {
   constructor(private userService: UserService) {}
 
   @Post()
-  @ApiResponse({
+  @ApiOkResponse({
     status: HttpStatus.CREATED,
-    description: 'Create success',
+    description: 'Create new user success',
+  })
+  @ApiForbiddenResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'Create new user fail',
   })
   async register(@Body() user: createUserDTO) {
     return await this.userService.create(user);
