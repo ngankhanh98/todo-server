@@ -12,5 +12,5 @@ export const exceptionMessage = {
   INTERNAL_ERROR: 'Internal error.',
   USER_NOT_FOUND: 'User not found.',
   USER_CREATED: 'User created.',
-  USER_ALREADY_EXIST: 'Username already exist',
+  USER_ALREADY_EXIST: 'Username already exist.',
 };
