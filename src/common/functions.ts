@@ -15,9 +15,9 @@ export async function compare(password: string, hash: string) {
   return await bcrypt.compare(password, hash);
 }
 
-export function verify(token: string) {
-  return jwt.verify(token, secret.passphrase, function(err, decoded) {
+export function verify(token: string): any {
+  return jwt.verify(token, secret.passphrase, function(err, decoded): any {
     if (err) throw new Error(err.message);
-    return decoded;
+    return decoded
   });
 }

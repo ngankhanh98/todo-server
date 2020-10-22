@@ -7,9 +7,10 @@ export class VerifyMiddleware implements NestMiddleware {
     const accessToken = req.headers['access-token'];
     try {
       const decoded = await verify(accessToken);
+      req.username = decoded.username;
       next();
     } catch (error) {
-      res.status(HttpStatus.UNAUTHORIZED).json(error);
+      res.status(HttpStatus.UNAUTHORIZED).send(error.message);
     }
   }
 }
