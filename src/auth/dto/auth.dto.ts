@@ -6,3 +6,17 @@ export class authDTO {
   @ApiProperty()
   password: string;
 }
+
+export class createUserDTO {
+  @ApiProperty()
+  username: string;
+
+  @ApiProperty()
+  password: string;
+
+  @ApiProperty()
+  fullname: string;
+
+  @ApiProperty()
+  email: string;
+}
