@@ -22,7 +22,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "2f479141a14464d02ce1";
+/******/ 	var hotCurrentHash = "cbe9504bd9962e218834";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -1006,7 +1006,7 @@ async function bootstrap() {
         module.hot.accept();
         module.hot.dispose(() => app.close());
     }
-    await app.listen(process.env.PORT || 80);
+    await app.listen(process.env.PORT || '80');
 }
 bootstrap();
 
