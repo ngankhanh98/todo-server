@@ -2,10 +2,9 @@ import {
   Body,
   Controller,
   Get,
-  HttpException,
   HttpStatus,
   Post,
-  Req,
+  Req
 } from '@nestjs/common';
 import { ApiHeader, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';

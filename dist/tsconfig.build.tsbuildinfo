@@ -3027,7 +3027,7 @@
         "affectsGlobalScope": false
       },
       "../src/user/user.controller.ts": {
-        "version": "744668ca2f77e2989204204bd38c213c0f123f69d66ba854a2de1e9d0f9d0781",
+        "version": "e29e853b1e572315908d96ec4fce2b25b56c87298bb6b478c3a747379983a915",
         "signature": "f6221e249e8f5827afffe21770cfcf7de57e87d74c0ab9d9e34e8911ad38a3a4",
         "affectsGlobalScope": false
       },
