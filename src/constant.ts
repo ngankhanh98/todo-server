@@ -2,10 +2,8 @@ export const database = {
   DATABASE_CONNECTION: 'DATABASE_CONNECTION',
 };
 
-export const repository = {
-  USER: 'USER_REPOSITORY',
+export const secret = {
+  saltRounds: 6,
+  passphrase: 'ZUv=ZMmdH2bY?6!$'
 };
 
-export const crypto = {
-  saltRounds: 6
-};

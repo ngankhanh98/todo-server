@@ -1,12 +1,17 @@
-import { Module } from '@nestjs/common';
-
-import { DatabaseModule } from '../database/database.module';
-import { UserProvider } from './user.provider';
-import { UserService } from './user.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
+import { VerifyMiddleware } from '../common/middleware/verify.middleware';
+import { User } from '../entities/user.entity';
 import { UserController } from './user.controller';
+import { UserService } from './user.service';
+
 @Module({
-  imports: [DatabaseModule],
-  providers: [UserService, ...UserProvider],
+  imports: [TypeOrmModule.forFeature([User])],
+  providers: [UserService],
   controllers: [UserController],
 })
-export class UserModule {}
+export class UserModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(VerifyMiddleware).forRoutes(UserController);
+  }
+}
