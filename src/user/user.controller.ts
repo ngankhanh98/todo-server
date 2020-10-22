@@ -7,11 +7,12 @@ import {
   Post,
   Req,
 } from '@nestjs/common';
-import { ApiHeader, ApiResponse } from '@nestjs/swagger';
+import { ApiHeader, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 import { createUserDTO, getUserDTO } from './dto/user.dto';
 import { UserService } from './user.service';
 
+@ApiTags('User')
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}

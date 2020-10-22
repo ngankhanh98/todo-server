@@ -2957,7 +2957,7 @@
         "affectsGlobalScope": false
       },
       "../src/auth/auth.controller.ts": {
-        "version": "f51de7c901e0d330535159afe0caee5d43400b968edfe33b39aad312e09f57c3",
+        "version": "4cb8a5951e52bcddde1104f9e6f0530621b24b1906779fddaf4054e6e3a48e1a",
         "signature": "a786275d90f614ccc4ce6e1ba17bbc55bd4d2fe87094666658f75ab3ae12fdca",
         "affectsGlobalScope": false
       },
@@ -2967,7 +2967,7 @@
         "affectsGlobalScope": false
       },
       "../src/database/database.providers.ts": {
-        "version": "0bfb08b24792a6bdfb060bfba8f3625e8771d006cfc7d2252e022c4b8bb20412",
+        "version": "77334e18a3c0df4dfd4ec11ac93bca2f21d649cb48c2f3bca3ca59923ff393f8",
         "signature": "d0576c5111402b10980ead08d4c006388ac32035610e715a9f3044e0a67e9c9a",
         "affectsGlobalScope": false
       },
@@ -3027,7 +3027,7 @@
         "affectsGlobalScope": false
       },
       "../src/user/user.controller.ts": {
-        "version": "9909b068db9bf3752db5d9c3713d03cae8726726f59c3959eee5ff892990d7fb",
+        "version": "744668ca2f77e2989204204bd38c213c0f123f69d66ba854a2de1e9d0f9d0781",
         "signature": "f6221e249e8f5827afffe21770cfcf7de57e87d74c0ab9d9e34e8911ad38a3a4",
         "affectsGlobalScope": false
       },
@@ -3392,8 +3392,8 @@
         "affectsGlobalScope": false
       },
       "../node_modules/@types/json5/index.d.ts": {
-        "version": "96d14f21b7652903852eef49379d04dbda28c16ed36468f8c9fa08f7c14c9538",
-        "signature": "96d14f21b7652903852eef49379d04dbda28c16ed36468f8c9fa08f7c14c9538",
+        "version": "c5a14bdeb170e0e67fb4200c54e0e02fd0ec94aca894c212c9d43c2916891542",
+        "signature": "c5a14bdeb170e0e67fb4200c54e0e02fd0ec94aca894c212c9d43c2916891542",
         "affectsGlobalScope": false
       },
       "../node_modules/@types/normalize-package-data/index.d.ts": {
@@ -3545,10 +3545,13 @@
       "experimentalDecorators": true,
       "allowSyntheticDefaultImports": true,
       "target": 4,
-      "sourceMap": true,
+      "sourceMap": false,
       "outDir": "./",
       "baseUrl": "..",
       "incremental": true,
+      "skipLibCheck": true,
+      "inlineSourceMap": false,
+      "declarationMap": false,
       "configFilePath": "../tsconfig.build.json"
     },
     "referencedMap": {
@@ -6058,6 +6061,7 @@
       ],
       "../src/auth/auth.controller.ts": [
         "../node_modules/@nestjs/common/index.d.ts",
+        "../node_modules/@nestjs/swagger/index.d.ts",
         "../src/auth/auth.service.ts",
         "../src/auth/dto/auth.dto.ts"
       ],
