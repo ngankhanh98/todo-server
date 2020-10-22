@@ -1,11 +1,11 @@
 import { TypeOrmModule } from '@nestjs/typeorm';
 export const databaseProvider = TypeOrmModule.forRoot({
   type: 'mysql',
-  host: 'localhost',
+  host: 'www.db4free.net',
   port: 3306,
-  username: 'root',
-  password: 'root',
-  database: 'todo',
+  username: 'ebanking',
+  password: '123456789',
+  database: 'ebanking',
   entities: ['"dist/**/*.entity{.ts,.js}"'],
   synchronize: true,
   autoLoadEntities: true,
