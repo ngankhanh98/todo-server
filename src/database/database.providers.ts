@@ -6,7 +6,7 @@ export const databaseProvider = TypeOrmModule.forRoot({
   username: 'ebanking',
   password: '123456789',
   database: 'ebanking',
-  entities: ['"dist/**/*.entity.js'],
+  entities: ['"dist/**/*.entity{.ts,.js}"'],
   synchronize: true,
   autoLoadEntities: true,
   // keepConnectionAlive: true,
