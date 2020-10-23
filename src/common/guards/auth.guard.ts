@@ -21,8 +21,6 @@ export class Guard implements CanActivate {
       const decoded = verify(accessToken);
       const { username } = decoded;
       request.body.username = username;
-      // console.log('username', username)
-      // console.log('request', request)
       return true;
     } catch (error) {
       throw new UnauthorizedException(error.message);
