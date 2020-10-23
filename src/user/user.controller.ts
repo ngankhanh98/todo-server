@@ -3,18 +3,17 @@ import {
   Controller,
   Get,
   UseGuards,
-  UseInterceptors,
+  UseInterceptors
 } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
-import { ApiHeader, ApiHeaders, ApiTags } from '@nestjs/swagger';
+import { ApiHeader, ApiTags } from '@nestjs/swagger';
 import {
   Crud,
   CrudController,
   CrudRequest,
-  CrudRequestInterceptor,
-  ParsedRequest,
+  CrudRequestInterceptor
 } from '@nestjsx/crud';
 import { plainToClass } from 'class-transformer';
+import { Request } from 'express';
 import { User } from 'src/entities/user.entity';
 import { Guard } from '../common/guards/auth.guard';
 import { getUserDTO } from './dto/user.dto';
@@ -55,8 +54,8 @@ export class UserController implements CrudController<User> {
 
   @UseInterceptors(CrudRequestInterceptor)
   @Get('/me')
-  async getMe(@Body() req: CrudRequest): Promise<getUserDTO> {
-    const { username } = req;
+  async getMe(@Body() req: Request): Promise<getUserDTO> {
+    const username = req['username']
     return plainToClass(getUserDTO, await this.service.getDetail(username));
   }
 }
