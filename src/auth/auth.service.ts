@@ -7,8 +7,10 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
+import { plainToClass } from 'class-transformer';
 import { exceptionMessage } from 'src/constant';
 import { User } from 'src/entities/user.entity';
+import { getUserDTO } from 'src/user/dto/user.dto';
 import { Repository } from 'typeorm';
 import { compare, hash } from '../common/functions';
 import { authDTO, createUserDTO } from './dto/auth.dto';
@@ -38,9 +40,10 @@ export class AuthService {
 
   public async login(user: authDTO) {
     const payload = { username: user.username };
-    return {
-      accessToken: this.jwtService.sign(payload),
-    };
+    const _user = await this.find(user);
+    const info = plainToClass(getUserDTO, _user[0]);
+
+    return { ...info, accessToken: this.jwtService.sign(payload) };
   }
   private async find(user: authDTO | createUserDTO) {
     return await this.authRepository.find({ username: user.username });
