@@ -1,14 +1,38 @@
-import { Controller } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
-import { Crud, CrudController } from '@nestjsx/crud';
-
-import { User } from '../entities/user.entity';
+import {
+  Body,
+  Controller,
+  Get,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { ApiHeader, ApiHeaders, ApiTags } from '@nestjs/swagger';
+import {
+  Crud,
+  CrudController,
+  CrudRequest,
+  CrudRequestInterceptor,
+  ParsedRequest,
+} from '@nestjsx/crud';
+import { plainToClass } from 'class-transformer';
+import { User } from 'src/entities/user.entity';
+import { Guard } from '../common/guards/auth.guard';
+import { getUserDTO } from './dto/user.dto';
 import { UserService } from './user.service';
 
 @ApiTags('User')
+@UseGuards(Guard)
 @Crud({
   model: {
     type: User,
+  },
+  routes: {
+    exclude: [
+      'createOneBase',
+      'createManyBase',
+      'getManyBase',
+      'replaceOneBase',
+    ],
   },
   params: {
     username: {
@@ -17,8 +41,22 @@ import { UserService } from './user.service';
       primary: true,
     },
   },
+  serialize: {
+    get: getUserDTO,
+    update: getUserDTO,
+  },
+})
+@ApiHeader({
+  name: 'access-token',
 })
 @Controller('user')
 export class UserController implements CrudController<User> {
   constructor(public service: UserService) {}
+
+  @UseInterceptors(CrudRequestInterceptor)
+  @Get('/me')
+  async getMe(@Body() req: CrudRequest): Promise<getUserDTO> {
+    const { username } = req;
+    return plainToClass(getUserDTO, await this.service.getDetail(username));
+  }
 }
