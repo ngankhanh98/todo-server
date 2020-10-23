@@ -11,7 +11,7 @@ import { secret } from '../constant';
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
-    JwtModule.register({ secret: secret.passphrase }),
+    JwtModule.register({ secret: secret.loginSecret }),
   ],
   providers: [AuthService],
   controllers: [AuthController],
