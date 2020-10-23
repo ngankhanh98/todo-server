@@ -2,40 +2,61 @@ import {
   Body,
   Controller,
   Get,
-  HttpException,
-  HttpStatus,
-  Post,
-  Req,
+  UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
-import { ApiHeader, ApiResponse } from '@nestjs/swagger';
+import { Reflector } from '@nestjs/core';
+import { ApiHeader, ApiHeaders, ApiTags } from '@nestjs/swagger';
+import {
+  Crud,
+  CrudController,
+  CrudRequest,
+  CrudRequestInterceptor,
+  ParsedRequest,
+} from '@nestjsx/crud';
 import { plainToClass } from 'class-transformer';
-import { createUserDTO, getUserDTO } from './dto/user.dto';
+import { User } from 'src/entities/user.entity';
+import { Guard } from '../common/guards/auth.guard';
+import { getUserDTO } from './dto/user.dto';
 import { UserService } from './user.service';
 
+@ApiTags('User')
+@UseGuards(Guard)
+@Crud({
+  model: {
+    type: User,
+  },
+  routes: {
+    exclude: [
+      'createOneBase',
+      'createManyBase',
+      'getManyBase',
+      'replaceOneBase',
+    ],
+  },
+  params: {
+    username: {
+      field: 'username',
+      type: 'string',
+      primary: true,
+    },
+  },
+  serialize: {
+    get: getUserDTO,
+    update: getUserDTO,
+  },
+})
+@ApiHeader({
+  name: 'access-token',
+})
 @Controller('user')
-export class UserController {
-  constructor(private userService: UserService) {}
+export class UserController implements CrudController<User> {
+  constructor(public service: UserService) {}
 
-  @Post()
-  @ApiResponse({
-    status: HttpStatus.CREATED,
-    description: 'Create new user success',
-  })
-  @ApiResponse({
-    status: HttpStatus.CONFLICT,
-    description: 'User already exist',
-  })
-  async register(@Body() user: createUserDTO): Promise<getUserDTO> {
-    return await plainToClass(getUserDTO, this.userService.create(user));
-  }
-
-  @Get()
-  @ApiHeader({
-    name: 'access-token',
-    description: 'Access token',
-  })
-  async getDetail(@Req() req: any) {
+  @UseInterceptors(CrudRequestInterceptor)
+  @Get('/me')
+  async getMe(@Body() req: CrudRequest): Promise<getUserDTO> {
     const { username } = req;
-    return await this.userService.getDetail(username);
+    return plainToClass(getUserDTO, await this.service.getDetail(username));
   }
 }

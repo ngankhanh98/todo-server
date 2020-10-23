@@ -8,10 +8,7 @@ import { UserService } from './user.service';
 @Module({
   imports: [TypeOrmModule.forFeature([User])],
   providers: [UserService],
+  exports: [UserService],
   controllers: [UserController],
 })
-export class UserModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(VerifyMiddleware).forRoutes(UserController);
-  }
-}
+export class UserModule {}
