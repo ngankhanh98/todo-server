@@ -6,7 +6,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiHeader, ApiHeaders, ApiTags } from '@nestjs/swagger';
 import {
   Crud,
   CrudController,
@@ -45,6 +45,9 @@ import { UserService } from './user.service';
     get: getUserDTO,
     update: getUserDTO,
   },
+})
+@ApiHeader({
+  name: 'access-token',
 })
 @Controller('user')
 export class UserController implements CrudController<User> {
