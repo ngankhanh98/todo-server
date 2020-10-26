@@ -8,7 +8,6 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
-import { userInfo } from 'os';
 import { exceptionMessage, secret } from 'src/constant';
 import { User } from 'src/entities/user.entity';
 import { getUserDTO } from 'src/user/dto/user.dto';
@@ -83,9 +82,7 @@ export class AuthService {
   }
 
   public async setPassword(username, newPassword) {
-    return await this.authRepository.update(
-      { username: username },
-      { password: newPassword },
-    );
+    const password = { password: '2' };
+    await this.authRepository.update({ username: username }, password);
   }
 }
