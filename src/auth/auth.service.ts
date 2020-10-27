@@ -82,7 +82,10 @@ export class AuthService {
   }
 
   public async setPassword(username, newPassword) {
-    const password = { password: '2' };
-    await this.authRepository.update({ username: username }, password);
+    return await this.authRepository.update(
+      { username: username },
+      { password: hash(newPassword) },
+    );
+   
   }
 }

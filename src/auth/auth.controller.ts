@@ -76,7 +76,7 @@ export class AuthController {
   @ApiHeader({ name: 'password' })
   @Post('/reset-password')
   async resetPassword(@Req() req: Request) {
-    const username = req['username']; // from RestGrant
+    const username = req.body['username']; // from RestGrant
     const password = req.headers['password'];
     return await this.authService.setPassword(username, password);
   }
