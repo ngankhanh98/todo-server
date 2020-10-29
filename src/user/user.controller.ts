@@ -51,6 +51,6 @@ export class UserController implements CrudController<User> {
   @Get('/me')
   async getMe(@Body() req: Request): Promise<getUserDTO> {
     const username = req['username']; // from AuthenticatedUserGuard
-    return plainToClass(getUserDTO, await this.service.getDetail(username));
+    return plainToClass(getUserDTO, await this.service.FindOne(username));
   }
 }

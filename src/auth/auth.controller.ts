@@ -5,28 +5,30 @@ import {
   HttpStatus,
   Post,
   Req,
+  Request,
   UseGuards,
 } from '@nestjs/common';
 import {
   ApiHeader,
-  ApiHeaders,
   ApiOkResponse,
   ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Request } from 'express';
 import { ResetGrant } from 'src/common/guards/resetGrant.guard';
 import { exceptionMessage } from '../constant';
 import { AuthService } from './auth.service';
 import { authDTO, createUserDTO } from './dto/auth.dto';
+import { LocalAuthGuard } from './local-auth.guard';
 
 @ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @UseGuards(LocalAuthGuard)
   @Post('/login')
+  
   @ApiOkResponse({
     description: 'Authenticated',
   })
@@ -42,9 +44,9 @@ export class AuthController {
     status: HttpStatus.NOT_FOUND,
     description: exceptionMessage.USER_NOT_FOUND,
   })
-  async login(@Body() user: authDTO) {
-    await this.authService.validateUser(user);
-    return await this.authService.login(user);
+  async login(@Request() req) {
+    console.log('req', req);
+    return req.user;
   }
 
   @Post('/register')

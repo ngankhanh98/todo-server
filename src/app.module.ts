@@ -6,9 +6,16 @@ import { DatabaseModule } from './database/database.module';
 import { UserModule } from './user/user.module';
 import { TaskController } from './task/task.controller';
 import { TaskModule } from './task/task.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [UserModule, DatabaseModule, AuthModule, TaskModule],
+  imports: [
+    UserModule,
+    DatabaseModule,
+    AuthModule,
+    TaskModule,
+    ConfigModule.forRoot(),
+  ],
   controllers: [AppController, TaskController],
   providers: [AppService],
 })
