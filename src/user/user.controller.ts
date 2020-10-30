@@ -3,14 +3,13 @@ import {
   Get,
   Request,
   UseGuards,
-  UseInterceptors
+  UseInterceptors,
 } from '@nestjs/common';
 import { ApiHeader, ApiTags } from '@nestjs/swagger';
 import { Crud, CrudController, CrudRequestInterceptor } from '@nestjsx/crud';
 import { plainToClass } from 'class-transformer';
 import { User } from 'src/entities/user.entity';
-// import { AuthenticatedUser } from '../common/guards/auth.guard';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { getUserDTO } from './dto/user.dto';
 import { UserService } from './user.service';
 

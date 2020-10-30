@@ -5,22 +5,20 @@ import {
   HttpStatus,
   Post,
   Req,
-  UseGuards,
+  UseGuards
 } from '@nestjs/common';
 import {
   ApiHeader,
   ApiOkResponse,
   ApiQuery,
   ApiResponse,
-  ApiTags,
+  ApiTags
 } from '@nestjs/swagger';
 import { Request } from 'express';
-import { ResetGrant } from 'src/common/guards/resetGrant.guard';
 import { exceptionMessage } from '../constant';
 import { AuthService } from './auth.service';
 import { authDTO, createUserDTO } from './dto/auth.dto';
-import { LocalAuthGuard } from './local-auth.guard';
-import { JwtAuthGuard } from './jwt-auth.guard';
+import { LocalAuthGuard } from '../common/guards/local-auth.guard';
 // import { LocalAuthGuard } from '../common/guards/local-auth.guard';
 // import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 
