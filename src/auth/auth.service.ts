@@ -2,11 +2,11 @@ import {
   ConflictException,
   Injectable,
   InternalServerErrorException,
-  NotFoundException,
+  NotFoundException
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { exceptionMessage, secret } from 'src/constant';
+import { exceptionMessage } from 'src/constant';
 import { User } from 'src/entities/user.entity';
 import { UserService } from 'src/user/user.service';
 import { Repository } from 'typeorm';
@@ -40,20 +40,20 @@ export class AuthService {
     };
   }
 
-  private async find(username: string) {
-    try {
-      return await this.authRepository.findOne({ username: username });
-    } catch (error) {
-      throw new InternalServerErrorException(error.message);
-    }
-  }
+  // private async find(username: string) {
+  //   try {
+  //     return await this.authRepository.findOne({ username: username });
+  //   } catch (error) {
+  //     throw new InternalServerErrorException(error.message);
+  //   }
+  // }
 
   public async register(user: createUserDTO) {
     const newUser = new User();
     const { username, password, fullname, email } = user;
 
-    const foundUser = await this.find(user.username);
-    if (!foundUser)
+    const existedUser = await this.userService.FindOne(user.username);
+    if (!existedUser)
       try {
         newUser.password = hash(password);
         newUser.username = username;
@@ -67,11 +67,13 @@ export class AuthService {
     throw new ConflictException(exceptionMessage.USER_ALREADY_EXIST);
   }
 
-  public async getURLToken(username: string) {
-    const foundUser = await this.find(username);
+  public async getResetPwdToken(username: string) {
+    const existedUser = await this.userService.FindOne(username);
     const payload = { username: username };
-    if (!foundUser)
+
+    if (!existedUser)
       throw new NotFoundException(exceptionMessage.USER_NOT_FOUND);
+
     return await this.jwtService.sign(payload, {
       secret: process.env.JWT_RESET_PWD_SECRET,
       expiresIn: process.env.JWT_EXPIRE,

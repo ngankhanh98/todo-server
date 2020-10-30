@@ -5,22 +5,21 @@ import {
   HttpStatus,
   Post,
   Req,
-  UseGuards
+  Request,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiHeader,
   ApiOkResponse,
   ApiQuery,
   ApiResponse,
-  ApiTags
+  ApiTags,
 } from '@nestjs/swagger';
-import { Request } from 'express';
+import { JwtResetPwdGuard } from 'src/common/guards/jwt-resetpwd.guard';
+import { LocalAuthGuard } from '../common/guards/local-auth.guard';
 import { exceptionMessage } from '../constant';
 import { AuthService } from './auth.service';
-import { authDTO, createUserDTO } from './dto/auth.dto';
-import { LocalAuthGuard } from '../common/guards/local-auth.guard';
-// import { LocalAuthGuard } from '../common/guards/local-auth.guard';
-// import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
+import { authDTO, createUserDTO, resetPwdDTO } from './dto/auth.dto';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -45,7 +44,6 @@ export class AuthController {
     description: exceptionMessage.USER_NOT_FOUND,
   })
   async login(@Body() req: authDTO) {
-    console.log('req', req);
     return this.authService.login(req);
   }
 
@@ -71,17 +69,15 @@ export class AuthController {
   @ApiHeader({ name: 'username' })
   async getURLToken(@Req() req: Request) {
     const username = req.headers['username'].toString();
-    return await this.authService.getURLToken(username);
+    return await this.authService.getResetPwdToken(username);
   }
-
-  // @UseGuards(ResetGrant)
-  // @UseGuards(JwtAuthGuard)
+  
+  @UseGuards(JwtResetPwdGuard)
   @ApiQuery({ name: 'token' })
-  @ApiHeader({ name: 'password' })
   @Post('/reset-password')
-  async resetPassword(@Req() req: Request) {
-    const username = req.body['username']; // from RestGrant
-    const password = req.headers['password'];
+  async resetPassword(@Request() req, @Body() request: resetPwdDTO) {
+    const username = req['user'];
+    const password = req.body['password'];
     return await this.authService.setPassword(username, password);
   }
 }
