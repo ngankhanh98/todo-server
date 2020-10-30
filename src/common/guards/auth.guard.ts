@@ -7,7 +7,7 @@ import {
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 import { secret } from 'src/constant';
-import { verify } from '../functions';
+import { verify } from '../utils';
 
 @Injectable()
 export class AuthenticatedUser implements CanActivate {

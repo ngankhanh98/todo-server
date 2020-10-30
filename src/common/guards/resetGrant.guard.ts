@@ -2,7 +2,7 @@ import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 import { secret } from 'src/constant';
-import { verify } from '../functions';
+import { verify } from '../utils';
 
 @Injectable()
 export class ResetGrant implements CanActivate {

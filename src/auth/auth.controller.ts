@@ -5,7 +5,6 @@ import {
   HttpStatus,
   Post,
   Req,
-  Request,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -15,11 +14,15 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { Request } from 'express';
 import { ResetGrant } from 'src/common/guards/resetGrant.guard';
 import { exceptionMessage } from '../constant';
 import { AuthService } from './auth.service';
 import { authDTO, createUserDTO } from './dto/auth.dto';
 import { LocalAuthGuard } from './local-auth.guard';
+import { JwtAuthGuard } from './jwt-auth.guard';
+// import { LocalAuthGuard } from '../common/guards/local-auth.guard';
+// import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -28,7 +31,6 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('/login')
-  
   @ApiOkResponse({
     description: 'Authenticated',
   })
@@ -44,9 +46,9 @@ export class AuthController {
     status: HttpStatus.NOT_FOUND,
     description: exceptionMessage.USER_NOT_FOUND,
   })
-  async login(@Request() req) {
+  async login(@Body() req: authDTO) {
     console.log('req', req);
-    return req.user;
+    return this.authService.login(req);
   }
 
   @Post('/register')
@@ -66,6 +68,7 @@ export class AuthController {
     await this.authService.register(user);
   }
 
+  // @UseGuards(JwtAuthGuard)
   @Get('/forgot-password')
   @ApiHeader({ name: 'username' })
   async getURLToken(@Req() req: Request) {
@@ -73,7 +76,8 @@ export class AuthController {
     return await this.authService.getURLToken(username);
   }
 
-  @UseGuards(ResetGrant)
+  // @UseGuards(ResetGrant)
+  // @UseGuards(JwtAuthGuard)
   @ApiQuery({ name: 'token' })
   @ApiHeader({ name: 'password' })
   @Post('/reset-password')

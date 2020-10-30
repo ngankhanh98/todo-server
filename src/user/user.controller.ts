@@ -1,21 +1,21 @@
 import {
-  Body,
   Controller,
   Get,
+  Request,
   UseGuards,
-  UseInterceptors,
+  UseInterceptors
 } from '@nestjs/common';
 import { ApiHeader, ApiTags } from '@nestjs/swagger';
 import { Crud, CrudController, CrudRequestInterceptor } from '@nestjsx/crud';
 import { plainToClass } from 'class-transformer';
-import { Request } from 'express';
 import { User } from 'src/entities/user.entity';
-import { AuthenticatedUser } from '../common/guards/auth.guard';
+// import { AuthenticatedUser } from '../common/guards/auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { getUserDTO } from './dto/user.dto';
 import { UserService } from './user.service';
 
 @ApiTags('User')
-@UseGuards(AuthenticatedUser)
+@UseGuards(JwtAuthGuard)
 @Crud({
   model: {
     type: User,
@@ -49,8 +49,8 @@ export class UserController implements CrudController<User> {
 
   @UseInterceptors(CrudRequestInterceptor)
   @Get('/me')
-  async getMe(@Body() req: Request): Promise<getUserDTO> {
-    const username = req['username']; // from AuthenticatedUserGuard
+  async getMe(@Request() req) {
+    const username = req['user'];
     return plainToClass(getUserDTO, await this.service.FindOne(username));
   }
 }

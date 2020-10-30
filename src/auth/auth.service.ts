@@ -1,20 +1,17 @@
 import {
   ConflictException,
-  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { plainToClass } from 'class-transformer';
 import { exceptionMessage, secret } from 'src/constant';
 import { User } from 'src/entities/user.entity';
-import { getUserDTO } from 'src/user/dto/user.dto';
 import { UserService } from 'src/user/user.service';
 import { Repository } from 'typeorm';
-import { compare, hash } from '../common/functions';
-import { authDTO, createUserDTO } from './dto/auth.dto';
+import { compare, hash } from '../common/utils';
+import { createUserDTO } from './dto/auth.dto';
 
 @Injectable()
 export class AuthService {
@@ -27,7 +24,7 @@ export class AuthService {
 
   public async validateUser(username: string, password: string): Promise<any> {
     const user = await this.userService.FindOne(username);
-    const verify = await compare(password, user.password);
+    const verify = user ? await compare(password, user.password) : false;
 
     if (user && verify) {
       const { password, ...result } = user;
@@ -35,16 +32,6 @@ export class AuthService {
     }
     return null;
   }
-
-  // public async login(user: authDTO) {
-  //   const payload = { username: user.username };
-  //   const info = plainToClass(getUserDTO, await this.find(user.username));
-  //   const accessToken = this.jwtService.sign(payload, {
-  //     secret: secret.loginSecret,
-  //     expiresIn: secret.expire,
-  //   });
-  //   return { ...info, accessToken };
-  // }
 
   async login(user: any) {
     const payload = { username: user.username };
@@ -86,8 +73,8 @@ export class AuthService {
     if (!foundUser)
       throw new NotFoundException(exceptionMessage.USER_NOT_FOUND);
     return await this.jwtService.sign(payload, {
-      secret: secret.resetPwdSecret,
-      expiresIn: secret.expire,
+      secret: process.env.JWT_RESET_PWD_SECRET,
+      expiresIn: process.env.JWT_EXPIRE,
     });
   }
 
