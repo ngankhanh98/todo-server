@@ -1,19 +1,17 @@
 import {
   ConflictException,
-  ForbiddenException,
   Injectable,
   InternalServerErrorException,
-  NotFoundException,
+  NotFoundException
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { plainToClass } from 'class-transformer';
-import { exceptionMessage, secret } from 'src/constant';
+import { exceptionMessage } from 'src/constant';
 import { User } from 'src/entities/user.entity';
-import { getUserDTO } from 'src/user/dto/user.dto';
+import { UserService } from 'src/user/user.service';
 import { Repository } from 'typeorm';
-import { compare, hash } from '../common/functions';
-import { authDTO, createUserDTO } from './dto/auth.dto';
+import { compare, hash } from '../common/utils';
+import { createUserDTO } from './dto/auth.dto';
 
 @Injectable()
 export class AuthService {
@@ -21,42 +19,41 @@ export class AuthService {
     @InjectRepository(User)
     private readonly authRepository: Repository<User>,
     private readonly jwtService: JwtService,
+    private readonly userService: UserService,
   ) {}
 
-  public async validateUser(user: authDTO) {
-    const foundUser = await this.find(user.username);
-    if (!foundUser)
-      throw new NotFoundException(exceptionMessage.USER_NOT_FOUND);
+  public async validateUser(username: string, password: string): Promise<any> {
+    const user = await this.userService.FindOne(username);
+    const verify = user ? await compare(password, user.password) : false;
 
-    const validUser = await compare(user.password, foundUser.password);
-
-    if (!validUser)
-      throw new ForbiddenException(exceptionMessage.PASSWORD_INCORRECT);
-  }
-
-  public async login(user: authDTO) {
-    const payload = { username: user.username };
-    const info = plainToClass(getUserDTO, await this.find(user.username));
-    const accessToken = this.jwtService.sign(payload, {
-      secret: secret.loginSecret,
-      expiresIn: secret.expire,
-    });
-    return { ...info, accessToken };
-  }
-  private async find(username: string) {
-    try {
-      return await this.authRepository.findOne({ username: username });
-    } catch (error) {
-      throw new InternalServerErrorException(error.message);
+    if (user && verify) {
+      const { password, ...result } = user;
+      return result;
     }
+    return null;
   }
+
+  async login(user: any) {
+    const payload = { username: user.username };
+    return {
+      accessToken: this.jwtService.sign(payload),
+    };
+  }
+
+  // private async find(username: string) {
+  //   try {
+  //     return await this.authRepository.findOne({ username: username });
+  //   } catch (error) {
+  //     throw new InternalServerErrorException(error.message);
+  //   }
+  // }
 
   public async register(user: createUserDTO) {
     const newUser = new User();
     const { username, password, fullname, email } = user;
 
-    const foundUser = await this.find(user.username);
-    if (!foundUser)
+    const existedUser = await this.userService.FindOne(user.username);
+    if (!existedUser)
       try {
         newUser.password = hash(password);
         newUser.username = username;
@@ -70,14 +67,16 @@ export class AuthService {
     throw new ConflictException(exceptionMessage.USER_ALREADY_EXIST);
   }
 
-  public async getURLToken(username: string) {
-    const foundUser = await this.find(username);
+  public async getResetPwdToken(username: string) {
+    const existedUser = await this.userService.FindOne(username);
     const payload = { username: username };
-    if (!foundUser)
+
+    if (!existedUser)
       throw new NotFoundException(exceptionMessage.USER_NOT_FOUND);
+
     return await this.jwtService.sign(payload, {
-      secret: secret.resetPwdSecret,
-      expiresIn: secret.expire,
+      secret: process.env.JWT_RESET_PWD_SECRET,
+      expiresIn: process.env.JWT_EXPIRE,
     });
   }
 
@@ -86,6 +85,5 @@ export class AuthService {
       { username: username },
       { password: hash(newPassword) },
     );
-   
   }
 }

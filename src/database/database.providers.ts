@@ -1,24 +1,17 @@
-import { TypeOrmModule } from '@nestjs/typeorm';
-export const databaseProvider = TypeOrmModule.forRoot({
-  // type: 'mysql',
-  // host: 'db4free.net',
-  // port: 3306,
-  // username: 'ebanking',
-  // password: '123456789',
-  // database: 'ebanking',
-  // entities: ['"dist/**/*.entity{.ts,.js}"'],
-  // synchronize: true,
-  // autoLoadEntities: true,
-  // keepConnectionAlive: true,
-
-  type: 'mysql',
-  host: 'localhost',
-  port: 3306,
-  username: 'root',
-  password: 'root',
-  database: 'todo',
-  entities: ['"dist/**/*.entity{.ts,.js}"'],
-  synchronize: true,
-  autoLoadEntities: true,
-  keepConnectionAlive: true,
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { localDB } from '../config/database.config';
+export const databaseProvider = TypeOrmModule.forRootAsync({
+  imports: [
+    ConfigModule.forRoot({
+      load: [localDB],
+    }),
+  ],
+  inject: [ConfigService],
+  useFactory: (configService: ConfigService): TypeOrmModuleOptions => {
+    return {
+      ...configService.get('database'),
+      entities: ['"dist/**/*.entity{.ts,.js}"'],
+    };
+  },
 });

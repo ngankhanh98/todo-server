@@ -5,27 +5,28 @@ import {
   HttpStatus,
   Post,
   Req,
+  Request,
   UseGuards,
 } from '@nestjs/common';
 import {
   ApiHeader,
-  ApiHeaders,
   ApiOkResponse,
   ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Request } from 'express';
-import { ResetGrant } from 'src/common/guards/resetGrant.guard';
+import { JwtResetPwdGuard } from 'src/common/guards/jwt-resetpwd.guard';
+import { LocalAuthGuard } from '../common/guards/local-auth.guard';
 import { exceptionMessage } from '../constant';
 import { AuthService } from './auth.service';
-import { authDTO, createUserDTO } from './dto/auth.dto';
+import { authDTO, createUserDTO, resetPwdDTO } from './dto/auth.dto';
 
 @ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @UseGuards(LocalAuthGuard)
   @Post('/login')
   @ApiOkResponse({
     description: 'Authenticated',
@@ -42,9 +43,8 @@ export class AuthController {
     status: HttpStatus.NOT_FOUND,
     description: exceptionMessage.USER_NOT_FOUND,
   })
-  async login(@Body() user: authDTO) {
-    await this.authService.validateUser(user);
-    return await this.authService.login(user);
+  async login(@Body() req: authDTO) {
+    return this.authService.login(req);
   }
 
   @Post('/register')
@@ -64,20 +64,20 @@ export class AuthController {
     await this.authService.register(user);
   }
 
+  // @UseGuards(JwtAuthGuard)
   @Get('/forgot-password')
   @ApiHeader({ name: 'username' })
   async getURLToken(@Req() req: Request) {
     const username = req.headers['username'].toString();
-    return await this.authService.getURLToken(username);
+    return await this.authService.getResetPwdToken(username);
   }
-
-  @UseGuards(ResetGrant)
+  
+  @UseGuards(JwtResetPwdGuard)
   @ApiQuery({ name: 'token' })
-  @ApiHeader({ name: 'password' })
   @Post('/reset-password')
-  async resetPassword(@Req() req: Request) {
-    const username = req.body['username']; // from RestGrant
-    const password = req.headers['password'];
+  async resetPassword(@Request() req, @Body() request: resetPwdDTO) {
+    const username = req['user'];
+    const password = req.body['password'];
     return await this.authService.setPassword(username, password);
   }
 }
