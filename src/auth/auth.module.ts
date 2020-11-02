@@ -1,9 +1,4 @@
-import {
-  CacheInterceptor,
-  CacheModule,
-  CACHE_MANAGER,
-  Module,
-} from '@nestjs/common';
+import { CacheInterceptor, CacheModule, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
@@ -25,15 +20,8 @@ import { ResetPwdJwtStrategy } from './strategies/resetpwd-jwt.strategy';
       signOptions: { expiresIn: process.env.JWT_EXPIRE },
     }),
     UserModule,
-    CacheModule.register(),
   ],
-  providers: [
-    AuthService,
-    LocalStrategy,
-    JwtStrategy,
-    ResetPwdJwtStrategy,
-    { provide: APP_INTERCEPTOR, useClass: CacheInterceptor },
-  ],
+  providers: [AuthService, LocalStrategy, JwtStrategy, ResetPwdJwtStrategy],
   controllers: [AuthController],
 })
 export class AuthModule {}

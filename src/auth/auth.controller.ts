@@ -1,8 +1,5 @@
 import {
   Body,
-  CacheInterceptor,
-
-
   Controller,
   Get,
   HttpStatus,
@@ -10,14 +7,13 @@ import {
   Req,
   Request,
   UseGuards,
-  UseInterceptors
 } from '@nestjs/common';
 import {
   ApiHeader,
   ApiOkResponse,
   ApiQuery,
   ApiResponse,
-  ApiTags
+  ApiTags,
 } from '@nestjs/swagger';
 import { JwtResetPwdGuard } from 'src/common/guards/jwt-resetpwd.guard';
 import { LocalAuthGuard } from '../common/guards/local-auth.guard';
@@ -31,9 +27,6 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @UseGuards(LocalAuthGuard)
-  @UseInterceptors(CacheInterceptor)
-
-  // @CacheKey('token')
   @Post('/login')
   @ApiOkResponse({
     description: 'Authenticated',
@@ -78,7 +71,7 @@ export class AuthController {
     const username = req.headers['username'].toString();
     return await this.authService.getResetPwdToken(username);
   }
-  
+
   @UseGuards(JwtResetPwdGuard)
   @ApiQuery({ name: 'token' })
   @Post('/reset-password')
