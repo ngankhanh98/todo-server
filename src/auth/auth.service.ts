@@ -1,8 +1,10 @@
 import {
+  CACHE_MANAGER,
   ConflictException,
+  Inject,
   Injectable,
   InternalServerErrorException,
-  NotFoundException
+  NotFoundException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -20,6 +22,7 @@ export class AuthService {
     private readonly authRepository: Repository<User>,
     private readonly jwtService: JwtService,
     private readonly userService: UserService,
+    @Inject(CACHE_MANAGER) protected readonly cacheManager,
   ) {}
 
   public async validateUser(username: string, password: string): Promise<any> {
@@ -35,9 +38,16 @@ export class AuthService {
 
   async login(user: any) {
     const payload = { username: user.username };
-    return {
-      accessToken: this.jwtService.sign(payload),
-    };
+    const accessToken = this.jwtService.sign(payload);
+
+    const sent = await this.cacheManager.set('accessToken', accessToken);
+    console.log('sent', sent);  // eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c
+
+    {
+      const retrieve = await this.cacheManager.get('accessToken');
+      console.log('retrieve', retrieve); // eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c
+    }
+    return { accessToken: accessToken };
   }
 
   public async register(user: createUserDTO) {
@@ -60,6 +70,9 @@ export class AuthService {
   }
 
   public async getResetPwdToken(username: string) {
+    const retrieve = await this.cacheManager.get('accessToken');
+    console.log('retrieve', retrieve); // undefined
+
     const existedUser = await this.userService.FindOne(username);
     const payload = { username: username };
 
@@ -73,6 +86,9 @@ export class AuthService {
   }
 
   public async setPassword(username, newPassword) {
+    console.log('why');
+    console.log('this.cacheManager', this.cacheManager);
+
     return await this.authRepository.update(
       { username: username },
       { password: hash(newPassword) },
