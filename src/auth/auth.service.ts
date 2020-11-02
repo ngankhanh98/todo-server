@@ -40,14 +40,6 @@ export class AuthService {
     };
   }
 
-  // private async find(username: string) {
-  //   try {
-  //     return await this.authRepository.findOne({ username: username });
-  //   } catch (error) {
-  //     throw new InternalServerErrorException(error.message);
-  //   }
-  // }
-
   public async register(user: createUserDTO) {
     const newUser = new User();
     const { username, password, fullname, email } = user;

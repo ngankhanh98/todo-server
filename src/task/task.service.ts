@@ -6,7 +6,11 @@ import { Task } from '../entities/task.entity';
 
 @Injectable()
 export class TaskService extends TypeOrmCrudService<Task> {
-  constructor(@InjectRepository(Task) repo) {
-    super(repo);
+  constructor(@InjectRepository(Task) private readonly taskRepository) {
+    super(taskRepository);
+  }
+
+  public async FindAll() {
+    return this.taskRepository.find({});
   }
 }
