@@ -9,7 +9,7 @@ export class TaskService extends TypeOrmCrudService<Task> {
     super(taskRepository);
   }
 
-  async getAll(username: string) {
+  async getTasksByCreator(username: string) {
     return this.taskRepository.find({ creator: username });
   }
 }

@@ -1,19 +1,17 @@
 import {
   CacheKey,
   CacheTTL,
-  Controller
+  Controller,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
-import {
-  Crud,
-  CrudController,
-  CrudRequest,
-  Override,
-  ParsedRequest
-} from '@nestjsx/crud';
+import { ApiHeader, ApiTags } from '@nestjs/swagger';
+import { Crud, CrudController, Override } from '@nestjsx/crud';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 import { Task } from '../entities/task.entity';
 import { TaskService } from './task.service';
 
+@UseGuards(JwtAuthGuard)
 @Crud({
   model: {
     type: Task,
@@ -27,10 +25,14 @@ export class TaskController implements CrudController<Task> {
   get base(): CrudController<Task> {
     return this;
   }
+
+  @ApiHeader({ name: 'access-token' })
   @Override()
   @CacheKey('tasks')
   @CacheTTL(600)
-  getMany(@ParsedRequest() req: CrudRequest) {
-    return this.service.getAll('ngankhanh98');
+  getMany(@Request() req) {
+    console.log('req', req);
+    const username = req['user'];
+    return this.service.getTasksByCreator(username);
   }
 }

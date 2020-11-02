@@ -16,7 +16,7 @@ import { ResetPwdJwtStrategy } from './strategies/resetpwd-jwt.strategy';
     ConfigModule.forRoot(),
     TypeOrmModule.forFeature([User]),
     JwtModule.register({
-      secret: process.env.JWT_RESET_PWD_SECRET,
+      secret: process.env.JWT_LOGIN_SECRET,
       signOptions: { expiresIn: process.env.JWT_EXPIRE },
     }),
     UserModule,
