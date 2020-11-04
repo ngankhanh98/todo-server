@@ -9,7 +9,7 @@ export const localDB = registerAs('database', () => ({
   database: process.env.TYPEORM_DATABASE,
   synchronize: process.env.TYPEORM_SYNCHRONIZE,
   autoLoadEntities: process.env.TYPEORM_AUTO_LOAD_ENTITIES,
-  keepConnectionAlive: process.env.TYPEORM_KEEP_CONNECTION_ALIVE,
+  keepConnectionAlive: process.env.TYPEORM_KEEP_CONNECTION_ALIVE,  
 }));
 
 export const remoteDB = registerAs('database', () => ({

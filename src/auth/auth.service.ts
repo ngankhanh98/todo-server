@@ -2,7 +2,8 @@ import {
   ConflictException,
   Injectable,
   InternalServerErrorException,
-  NotFoundException
+  Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -22,8 +23,10 @@ export class AuthService {
     private readonly userService: UserService,
   ) {}
 
+  private readonly logger = new Logger(AuthService.name);
+
   public async validateUser(username: string, password: string): Promise<any> {
-    const user = await this.userService.FindOne(username);
+    const user = await this.userService.findUserByUsername(username);
     const verify = user ? await compare(password, user.password) : false;
 
     if (user && verify) {
@@ -33,26 +36,13 @@ export class AuthService {
     return null;
   }
 
-  async login(user: any) {
-    const payload = { username: user.username };
-    return {
-      accessToken: this.jwtService.sign(payload),
-    };
-  }
-
-  // private async find(username: string) {
-  //   try {
-  //     return await this.authRepository.findOne({ username: username });
-  //   } catch (error) {
-  //     throw new InternalServerErrorException(error.message);
-  //   }
-  // }
-
   public async register(user: createUserDTO) {
     const newUser = new User();
     const { username, password, fullname, email } = user;
 
-    const existedUser = await this.userService.FindOne(user.username);
+    const existedUser = await this.userService.findUserByUsername(
+      user.username,
+    );
     if (!existedUser)
       try {
         newUser.password = hash(password);
@@ -67,17 +57,20 @@ export class AuthService {
     throw new ConflictException(exceptionMessage.USER_ALREADY_EXIST);
   }
 
+  public async login(user) {
+    return await this.userService.getAccessToken(user);
+  }
+
   public async getResetPwdToken(username: string) {
-    const existedUser = await this.userService.FindOne(username);
+    const existedUser = await this.userService.findUserByUsername(username);
     const payload = { username: username };
+
+    this.logger.debug(this.jwtService);
 
     if (!existedUser)
       throw new NotFoundException(exceptionMessage.USER_NOT_FOUND);
 
-    return await this.jwtService.sign(payload, {
-      secret: process.env.JWT_RESET_PWD_SECRET,
-      expiresIn: process.env.JWT_EXPIRE,
-    });
+    return await this.jwtService.sign(payload);
   }
 
   public async setPassword(username, newPassword) {

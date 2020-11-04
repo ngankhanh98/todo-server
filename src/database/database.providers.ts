@@ -11,6 +11,7 @@ export const databaseProvider = TypeOrmModule.forRootAsync({
   useFactory: (configService: ConfigService): TypeOrmModuleOptions => {
     return {
       ...configService.get('database'),
+      cache: true,
       entities: ['"dist/**/*.entity{.ts,.js}"'],
     };
   },

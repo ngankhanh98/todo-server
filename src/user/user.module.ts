@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -10,11 +10,12 @@ import { UserService } from './user.service';
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
-    PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
-      secret: process.env.JWT_LOGIN_SECRET,
+      secret: process.env.JWT_AUTH_SECRET,
       signOptions: { expiresIn: process.env.JWT_EXPIRE },
     }),
+    PassportModule.register({ defaultStrategy: 'auth' }),
+    Logger,
   ],
   providers: [UserService, JwtStrategy],
   exports: [UserService],

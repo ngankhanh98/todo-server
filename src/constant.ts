@@ -6,7 +6,7 @@ export const secret = {
   saltRounds: 6,
   loginSecret: 'ZUv=ZMmdH2bY?6!$',
   resetPwdSecret: 'QvSUDbu5w_5eZ!9s',
-  expire: "24h",
+  expire: '24h',
 };
 
 export const exceptionMessage = {
@@ -15,4 +15,9 @@ export const exceptionMessage = {
   USER_NOT_FOUND: 'User not found.',
   USER_CREATED: 'User created.',
   USER_ALREADY_EXIST: 'Username already exist.',
+};
+
+export const passportStrategies = {
+  AUTH: 'auth',
+  RESET_PASSWORD: 'reset-password',
 };

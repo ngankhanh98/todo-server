@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from 'src/user/user.module';
 import { JwtStrategy } from '../auth/strategies/jwt.strategy';
@@ -18,9 +19,10 @@ import { ResetPwdJwtStrategy } from './strategies/resetpwd-jwt.strategy';
       secret: process.env.JWT_RESET_PWD_SECRET,
       signOptions: { expiresIn: process.env.JWT_EXPIRE },
     }),
+    PassportModule.register({ defaultStrategy: 'reset-password' }),
     UserModule,
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy, ResetPwdJwtStrategy],
+  providers: [AuthService, LocalStrategy, ResetPwdJwtStrategy],
   controllers: [AuthController],
 })
 export class AuthModule {}
