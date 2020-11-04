@@ -50,6 +50,6 @@ export class UserController implements CrudController<User> {
   @Get('/me')
   async getMe(@Request() req) {
     const username = req['user'];
-    return plainToClass(getUserDTO, await this.service.findOneTaskByOwner(username));
+    return plainToClass(getUserDTO, await this.service.findUserByUsername(username));
   }
 }

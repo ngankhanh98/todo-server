@@ -23,7 +23,7 @@ export class AuthService {
   ) {}
 
   public async validateUser(username: string, password: string): Promise<any> {
-    const user = await this.userService.findOneTaskByOwner(username);
+    const user = await this.userService.findUserByUsername(username);
     const verify = user ? await compare(password, user.password) : false;
 
     if (user && verify) {
@@ -44,7 +44,7 @@ export class AuthService {
     const newUser = new User();
     const { username, password, fullname, email } = user;
 
-    const existedUser = await this.userService.findOneTaskByOwner(user.username);
+    const existedUser = await this.userService.findUserByUsername(user.username);
     if (!existedUser)
       try {
         newUser.password = hash(password);
@@ -63,7 +63,7 @@ export class AuthService {
     // const retrieve = await this.cacheManager.get('accessToken');
     // console.log('retrieve', retrieve); // undefined
 
-    const existedUser = await this.userService.findOneTaskByOwner(username);
+    const existedUser = await this.userService.findUserByUsername(username);
     const payload = { username: username };
 
     if (!existedUser)
