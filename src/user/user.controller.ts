@@ -1,27 +1,20 @@
 import {
-  Body,
   Controller,
   Get,
+  Request,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
-import { ApiHeader, ApiHeaders, ApiTags } from '@nestjs/swagger';
-import {
-  Crud,
-  CrudController,
-  CrudRequest,
-  CrudRequestInterceptor,
-  ParsedRequest,
-} from '@nestjsx/crud';
+import { ApiHeader, ApiTags } from '@nestjs/swagger';
+import { Crud, CrudController, CrudRequestInterceptor } from '@nestjsx/crud';
 import { plainToClass } from 'class-transformer';
 import { User } from 'src/entities/user.entity';
-import { Guard } from '../common/guards/auth.guard';
+import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { getUserDTO } from './dto/user.dto';
 import { UserService } from './user.service';
 
 @ApiTags('User')
-@UseGuards(Guard)
+@UseGuards(JwtAuthGuard)
 @Crud({
   model: {
     type: User,
@@ -55,8 +48,8 @@ export class UserController implements CrudController<User> {
 
   @UseInterceptors(CrudRequestInterceptor)
   @Get('/me')
-  async getMe(@Body() req: CrudRequest): Promise<getUserDTO> {
-    const { username } = req;
-    return plainToClass(getUserDTO, await this.service.getDetail(username));
+  async getMe(@Request() req) {
+    const username = req['user'];
+    return plainToClass(getUserDTO, await this.service.findUserByUsername(username));
   }
 }

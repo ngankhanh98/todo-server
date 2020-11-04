@@ -20,3 +20,8 @@ export class createUserDTO {
   @ApiProperty()
   email: string;
 }
+
+export class resetPwdDTO {
+  @ApiProperty()
+  password: string;
+}

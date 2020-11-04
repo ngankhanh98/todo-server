@@ -4,7 +4,9 @@ export const database = {
 
 export const secret = {
   saltRounds: 6,
-  passphrase: 'ZUv=ZMmdH2bY?6!$',
+  loginSecret: 'ZUv=ZMmdH2bY?6!$',
+  resetPwdSecret: 'QvSUDbu5w_5eZ!9s',
+  expire: "24h",
 };
 
 export const exceptionMessage = {
