@@ -10,12 +10,12 @@ import { UserService } from './user.service';
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
-    PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
-      secret: process.env.JWT_SECRET,
+      secret: process.env.JWT_AUTH_SECRET,
       signOptions: { expiresIn: process.env.JWT_EXPIRE },
     }),
-    Logger
+    PassportModule.register({ defaultStrategy: 'auth' }),
+    Logger,
   ],
   providers: [UserService, JwtStrategy],
   exports: [UserService],
