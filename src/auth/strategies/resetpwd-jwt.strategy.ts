@@ -1,11 +1,12 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
+import { passportStrategies } from 'src/constant';
 
 @Injectable()
 export class ResetPwdJwtStrategy extends PassportStrategy(
   Strategy,
-  'reset-password',
+  passportStrategies.RESET_PASSWORD,
 ) {
   constructor() {
     super({
