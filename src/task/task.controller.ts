@@ -5,9 +5,11 @@ import {
   Controller,
   Post,
   Request,
+  UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiHeader, ApiTags } from '@nestjs/swagger';
 import {
   Crud,
@@ -22,7 +24,6 @@ import { TaskService } from './task.service';
 
 @UseGuards(JwtAuthGuard)
 @ApiHeader({ name: 'access-token' })
-
 @Crud({
   model: {
     type: Task,
@@ -47,7 +48,11 @@ export class TaskController implements CrudController<Task> {
 
   @UseInterceptors(CrudRequestInterceptor)
   @Post('/new-task')
-  async addNewTask(@Body() req: getTaskDTO) {
-    return this.service.addNewTask(req);
+  @UseInterceptors(FileInterceptor('file'))
+  async addNewTask(
+    @Body() req: getTaskDTO,
+    @UploadedFile() file,
+  ): Promise<any> {
+    return await this.service.addNewTask(file);
   }
 }

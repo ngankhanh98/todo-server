@@ -1,13 +1,12 @@
-import { CacheInterceptor, CacheModule, Module, Logger } from '@nestjs/common';
+import { CacheInterceptor, CacheModule, Logger, Module } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { ScheduleModule } from '@nestjs/schedule';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { DatabaseModule } from './database/database.module';
-import { TaskController } from './task/task.controller';
 import { TaskModule } from './task/task.module';
 import { UserModule } from './user/user.module';
-import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -17,9 +16,9 @@ import { ScheduleModule } from '@nestjs/schedule';
     TaskModule,
     CacheModule.register(),
     ScheduleModule.forRoot(),
-    Logger
+    Logger,
   ],
-  controllers: [AppController, TaskController],
+  controllers: [AppController],
   providers: [
     AppService,
     {

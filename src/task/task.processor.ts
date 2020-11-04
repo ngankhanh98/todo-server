@@ -10,7 +10,6 @@ export class TaskProcessor {
   handleNewTask(job: Job) {
 
     this.logger.debug('Start adding new task...');
-    this.logger.debug(job.data);
     this.logger.debug('Finish adding new task...');
   }
 }

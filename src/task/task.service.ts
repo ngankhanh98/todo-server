@@ -19,7 +19,7 @@ export class TaskService extends TypeOrmCrudService<Task> {
     return this.taskRepository.find({ creator: username });
   }
 
-  async addNewTask(task: getTaskDTO) {
+  async addNewTask(task) {
     console.log('task', task);
     this.taskQueue.add('newTask', { data: task });
   }
