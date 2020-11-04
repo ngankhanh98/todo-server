@@ -3,15 +3,15 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
+export class JwtStrategy extends PassportStrategy(Strategy, 'auth') {
   constructor() {
     super({
       jwtFromRequest: ExtractJwt.fromHeader('access-token'),
       ignoreExpiration: false,
-      secretOrKey: process.env.JWT_SECRET,
+      secretOrKey: process.env.JWT_AUTH_SECRET,
     });
     console.log('this.jwtFromRequest', this.jwtFromRequest);
-    console.log('this.secretOrKey', this.secretOrKey)
+    console.log('this.secretOrKey', this.secretOrKey);
   }
 
   async validate(payload: any) {
