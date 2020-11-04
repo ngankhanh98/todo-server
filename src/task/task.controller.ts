@@ -31,7 +31,6 @@ export class TaskController implements CrudController<Task> {
   @CacheKey('tasks')
   @CacheTTL(600)
   getMany(@Request() req) {
-    console.log('req', req);
     const username = req['user'];
     return this.service.getTasksByCreator(username);
   }

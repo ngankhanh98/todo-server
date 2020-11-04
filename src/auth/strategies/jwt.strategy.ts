@@ -8,8 +8,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromHeader('access-token'),
       ignoreExpiration: false,
-      secretOrKey: process.env.JWT_LOGIN_SECRET,
+      secretOrKey: process.env.JWT_SECRET,
     });
+    console.log('this.jwtFromRequest', this.jwtFromRequest);
+    console.log('this.secretOrKey', this.secretOrKey)
   }
 
   async validate(payload: any) {
