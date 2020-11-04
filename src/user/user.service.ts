@@ -14,11 +14,7 @@ export class UserService extends TypeOrmCrudService<User> {
   }
   private readonly logger = new Logger(UserService.name);
 
-  @Cron(CronExpression.EVERY_MINUTE, { name: 'notification' })
   public async findUserByUsername(username: string) {
-    const job = this.schedulerRegistry.getCronJob('notification');
-    job.stop();
-    console.log(job.lastDate());
     return this.userRepository.findOne({ username: username });
   }
 }

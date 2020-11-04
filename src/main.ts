@@ -1,6 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import * as compression from 'compression';
+import * as helmet from 'helmet';
+
 // import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
 declare const module: any;
@@ -8,6 +11,9 @@ declare const module: any;
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
+  app.use(compression());
+  app.use(helmet());
+
   // app.useGlobalFilters(new HttpExceptionFilter());
 
   const options = new DocumentBuilder()
