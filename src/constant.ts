@@ -4,9 +4,9 @@ export const database = {
 
 export const secret = {
   saltRounds: 6,
-  loginSecret: 'ZUv=ZMmdH2bY?6!$',
-  resetPwdSecret: 'QvSUDbu5w_5eZ!9s',
-  expire: '24h',
+  JWT_EXPIRE: '24h',
+  JWT_AUTH_SECRET: '0Z4L3E4HMWR6KMGQ6CPJ-auth',
+  JWT_RESET_PWD_SECRET: '3yn4plnx0n56mt4rsozgudoi41mlg0kgzpficvz5-resetpwd',
 };
 
 export const exceptionMessage = {
