@@ -1,9 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { SchedulerRegistry } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { User } from '../entities/user.entity';
-import { Cron, CronExpression, SchedulerRegistry } from '@nestjs/schedule';
-import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UserService extends TypeOrmCrudService<User> {
