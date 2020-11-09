@@ -74,6 +74,153 @@ throw new ConflictException(exceptionMessage.USER_ALREADY_EXIST);
 
 #### 2.2.4. nestjsx/crud
 
+##### Installation
+```bash
+$ npm i @nestjsx/crud class-transformer class-validator
+$ npm i @nestjsx/crud-typeorm @nestjs/typeorm typeorm
+```
+
+##### Getting started
+Create an entity, let say, **user.entity.ts**. This should map with columns in your table `user` (database)
+```ts
+import { Entity, Column, PrimaryColumn } from 'typeorm';
+
+@Entity()
+export class User {
+  @PrimaryColumn()
+  username: string;
+
+  @Column()
+  password: string;
+
+  @Column()
+  fullname: string;
+
+  @Column()
+  email: string;
+}
+```
+
+Create a service, **user.service.ts**
+```ts
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { TypeOrmCrudService } from "@nestjsx/crud-typeorm";
+
+import { User } from "./user.entity";
+
+@Injectable()
+export class UserService extends TypeOrmCrudService<User> {
+  constructor(@InjectRepository(User) repo) {
+    super(repo);
+  }
+}
+```
+
+Create a controller, **user.controller.ts**
+```ts
+import { Controller } from "@nestjs/common";
+import { Crud, CrudController } from "@nestjsx/crud";
+
+import { User } from "./user.entity";
+import { UserService } from "./user.service";
+
+@Crud({
+  model: {
+    type: User,
+  },
+})
+@Controller("user")
+export class UserController implements CrudController<User> {
+  constructor(public service: UserService) {}
+```
+Create a module, **user.module.ts**
+```ts
+import { Module } from "@nestjs/common";
+import { TypeOrmModule } from "@nestjs/typeorm";
+
+import { User } from "./User.entity";
+import { UserService } from "./user.service";
+import { UserController } from "./user.controller";
+
+@Module({
+  imports: [TypeOrmModule.forFeature([User])],
+  providers: [UserService],
+  exports: [UserService],
+  controllers: [UserController],
+})
+export class UserModule {}
+```
+
+
+##### Exclude endpoints
+You might want to exclude some endpoints, in **.controller.ts**
+```ts
+... 
+@Crud({
+  model: {
+    type: User,
+  },
+  routes: {
+    exclude: [
+      'createOneBase',
+      'createManyBase',
+      'getManyBase',
+      'replaceOneBase',
+    ],
+  }
+})
+...
+```
+
+##### Add new endpoint
+Besides basic CRUD, you might want to add new, place `@UseInterceptors(CrudRequestInterceptor)` before it
+```ts
+...
+export class UserController implements CrudController<User> {
+  constructor(public service: UserService) {}
+
+  @UseInterceptors(CrudRequestInterceptor)
+  @Get('/me')
+  async getMe(@Request() req) {
+    // your funtion
+  }
+}
+```
+
+##### Override endpoint
+You might want to override an existing endpoint: place `@Override()` before which route being overrided. Ex, **task.controller.ts**
+```ts
+...
+export class TaskController implements CrudController<Task> {
+  constructor(readonly service: TaskService) {}
+
+  @Override()
+  @CacheKey('tasks')
+  @CacheTTL(600)
+  getMany(@Request() req) {
+    const username = req['user'];
+    return this.service.getTasksByCreator(username);
+  }
+}
+```
+Here is a list of crud default route can be overrided, https://github.com/nestjsx/crud/wiki/Controllers#routes-override
+
+##### Serialize
+@nestjsx/crud using your **entity**, which reflects all columns in your table. So there is a concern, if my [table].[user] contains `username` and `password`, how can I hide them from `GET - /user/{username}`. 
+
+Let say, `GET - /user` can only retrive data of `getUserDTO`
+```ts
+@Crud({
+  ...
+  serialize: {
+    get: getUserDTO,
+  },
+  ...
+})
+
+```
+
 #### 2.2.5. Cache
 A simple techniques implementing in `/task` (TaskModule) to cache a list of task in previous response.
 #### 2.2.6. Queue
