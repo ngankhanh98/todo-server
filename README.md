@@ -9,7 +9,7 @@
       - [2.2.1. Guard, authentication](#221-guard--authentication)
       - [2.2.2. Configuration](#222-configuration)
       - [2.2.3. Exception filters](#223-exception-filters)
-      - [2.2.4. nestjsx/crud](#224-nestjsx-crud)
+      - [2.2.4. nestjsx/crud](#224-nestjsxcrud)
         * [Installation](#installation)
         * [Getting started](#getting-started)
         * [Exclude endpoints](#exclude-endpoints)
