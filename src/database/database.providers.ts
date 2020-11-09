@@ -1,10 +1,11 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { localDB } from '../config/database.config';
+import { localDB, remoteDB } from '../config/database.config';
 export const databaseProvider = TypeOrmModule.forRootAsync({
   imports: [
     ConfigModule.forRoot({
-      load: [localDB],
+      // load: [localDB],
+      load: [remoteDB],
     }),
   ],
   inject: [ConfigService],
