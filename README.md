@@ -49,7 +49,7 @@ It's all about creating a socket server and let client emit to it. `Observerable
 
 ## Design
 
-![](https://github.com/ngankhanh98/todo-server/blob/master/docs/Untitled%20Diagram.png?raw=true)
+![](https://github.com/ngankhanh98/todo-server/blob/master/docs/Diagram.png?raw=true)
 
 - **AppModule**: interface of the application, imports other modules.
 - **UserModule**: whose controller is `UserController`, and import `UserService`.

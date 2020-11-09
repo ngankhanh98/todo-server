@@ -21,7 +21,7 @@ export class UserService extends TypeOrmCrudService<User> {
   }
 
   // FIXME: I don't know if I placed it properly, or this should go for auth.service
-  // however, I place it here with the attention using JWT_AUTH_SECRET, differ from auth.service
+  // however, I place it here with the ittention using JWT_AUTH_SECRET, differ from auth.service
   // using JWT_RESET_SECRET
   public async getAccessToken(user: any) {
   
