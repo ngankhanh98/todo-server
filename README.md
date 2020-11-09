@@ -209,7 +209,7 @@ Here is a list of crud default route can be overrided, https://github.com/nestjs
 ##### Serialize
 @nestjsx/crud using your **entity**, which reflects all columns in your table. So there is a concern, if my [table].[user] contains `username` and `password`, how can I hide them from `GET - /user/{username}`. 
 
-Let say, `GET - /user` can only retrive data of `getUserDTO`
+Let say, `GET - /user` can only retrive data that maps `getUserDTO`, add `serialize` in your `@Crud({})` decorator
 ```ts
 @Crud({
   ...
