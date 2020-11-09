@@ -28,6 +28,28 @@ Meanwhile,
 - **Forgot password** using [URL Tokens](https://cheatsheetseries.owasp.org/cheatsheets/Forgot_Password_Cheat_Sheet.html#url-tokens). To process changing password, user must first create request to `/forgot-password`, a token will be responsed. Then, he/she requests `/reset-password` with **that token**. Only valid and unexpired token (in 24h) can pass `ResetPwdGuard` of `/reset-password` to complete changing password.
 - **CRUD task, CRUD user** require `accessToken` in every request's header, and can only Create/Read/Update/Delete on that token's user.
 
+
+## 1.1. Restful API
+To my knowledge, Restful API is one way to implement of Application Programming Interface. Two main characteristics Restful API is mostly known for is: **endpoint** and **HTTP method**
+```
+     GET /products 
+     ^^^
+     method
+     ^^^^^^^^^^^^^
+     endpoint
+```
+### HTTP methods
+
+| Method | Purpose | Response status|
+|--------|---------|----------------|
+| GET    | retrieve data|`200` OK, `404` Not found|
+| POST   | submit an entity to the specified resource | `201` Created, `403` Forbidden, `409` Conflict|
+| PUT | replaces all fields of the target resource | `201` Created, `204` No Content
+| DELETE | deletes the specified resource. | `200` OK,  `204` No Content (Delete fullfiled, no information to be supplied)
+| OPTIONS | _'check whether an enpoint available'_. - Mr. Tuan (otherwise I have no idea) | 
+| PATCH | modifies partially to a resource. | `200` Succeeded, `404` Not found|
+
+
 ## 2. Technical stacks
 ### 2.1. Main stack
 **Frameword:** NestJS<br>
