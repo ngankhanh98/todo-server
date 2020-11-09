@@ -1,22 +1,29 @@
 # Report
 
-- [Report](#report)
-  * [1. Introduction](#1-introduction)
-  * [2. Technical stacks](#2-technical-stacks)
+* [1. Introduction](#1-introduction)
+    + [1.1. Restful API](#11-restful-api)
+    + [HTTP methods](#http-methods)
+* [2. Technical stacks](#2-technical-stacks)
     + [2.1. Main stack](#21-main-stack)
     + [2.2. Additional techniques](#22-additional-techniques)
       - [2.2.1. Guard, authentication](#221-guard--authentication)
       - [2.2.2. Configuration](#222-configuration)
       - [2.2.3. Exception filters](#223-exception-filters)
       - [2.2.4. nestjsx/crud](#224-nestjsx-crud)
+        * [Installation](#installation)
+        * [Getting started](#getting-started)
+        * [Exclude endpoints](#exclude-endpoints)
+        * [Add new endpoint](#add-new-endpoint)
+        * [Override endpoint](#override-endpoint)
+        * [Serialize](#serialize)
       - [2.2.5. Cache](#225-cache)
       - [2.2.6. Queue](#226-queue)
       - [2.2.7. Task schedule (@Cron)](#227-task-schedule---cron-)
       - [2.2.8. Secure with helmet](#228-secure-with-helmet)
       - [2.2.9. Websocket (Limitation)](#229-websocket--limitation-)
-  * [3. Design diagram](#3-design-diagram)
-  * [4. Design explaination](#4-design-explaination)
-
+* [3. Design diagram](#3-design-diagram)
+* [4. Design explaination](#4-design-explaination)
+* [Acknowledge](#acknowledge)
 
 ## 1. Introduction
 This is TODO API, includes:
@@ -29,7 +36,7 @@ Meanwhile,
 - **CRUD task, CRUD user** require `accessToken` in every request's header, and can only Create/Read/Update/Delete on that token's user.
 
 
-## 1.1. Restful API
+### 1.1. Restful API
 To my knowledge, Restful API is one way to implement of Application Programming Interface. Two main characteristics Restful API is mostly known for is: **endpoint** and **HTTP method**
 ```
      GET /products 
@@ -267,7 +274,7 @@ It's all about creating a socket server and let client emit to it. `Observerable
 - **DatabaseModule**: import **DatabaseProvider** which is TypeORM under the hood.
 
 ## Acknowledge
-- This project and my knowledge accumulation in NestJS is blessed by Mr. Dinh Tien @dohoangdinhtien
+- This project and my knowledge accumulation in NestJS is blessed by Mr. Dinh Tien [@dohoangdinhtien](https://github.com/dohoangdinhtien)
 - NestJS Official Docs, https://docs.nestjs.com/
 - CRUD for RESTful APIs built with NestJs, https://github.com/nestjsx/crud
 - Forgot password approaches, https://cheatsheetseries.owasp.org/cheatsheets/Forgot_Password_Cheat_Sheet.html
