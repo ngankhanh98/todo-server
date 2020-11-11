@@ -284,3 +284,32 @@ It's all about creating a socket server and let client emit to it. `Observerable
 - Clean code JavaScript, https://github.com/ryanmcdermott/clean-code-javascript
 - JavaScript Modern, https://javascript.info/
 
+_________________________________________________
+
+## Authentication++
+
+### Limitation
+
+The current authentication approach might face with couple issues:
+- Lack of `POST - /logout`, means that logging out is handled by deleting token in client.
+- Token's expiration is too long (24h), which is not safe. A solution must be found to cut off expiration and yet keep user stay logged in in fairly long time. Maybe `refreshToken`
+
+### Approach
+
+#### Create a db.table `refreshTokenExp`
+Which include: username, refreshToken, exp
+
+#### Implement `GET - /refresktoken` endpoint
+It should work in the following flow by [this practice](https://hasura.io/blog/best-practices-of-using-jwt-with-graphql/#persistance): 
+
+1. The user logs in with a login API call.
+2. Server generates `accessToken` and `refreshToken`
+3. Server sets a HttpOnly cookie with `refreshToken`. `accessToken` and `tokenExpiry` are returned back to the client as a JSON payload.
+4. The `accessToken` is stored *in memory* [1]
+5. A countdown to a future silent refresh is started based on `tokenExpiry` **OR** silent refresh happen every time user makes request.
+
+\[1] In [the same article](https://hasura.io/blog/best-practices-of-using-jwt-with-graphql/#persistance), they suggest client not to save token in nether Cookies nor Local Storage due to some sort of actacks, and recommend to user *memory*. Read the whole post, still can't figure out what exactly is *memory*.
+
+#### Implement `POST - /logout` endpoint
+1. Server erase `refreshToken`.
+2. Client erase `accessToken` in memory.
