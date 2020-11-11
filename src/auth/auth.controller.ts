@@ -89,4 +89,6 @@ export class AuthController {
 
     return await this.authService.setPassword(username, password);
   }
+
+  
 }
