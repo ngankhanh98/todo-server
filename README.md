@@ -313,3 +313,21 @@ It should work in the following flow by [this practice](https://hasura.io/blog/b
 #### Implement `POST - /logout` endpoint
 1. Server erase `refreshToken`.
 2. Client erase `accessToken` in memory.
+
+// response swa
+// TypeORM validate, relationship
+// Logger trong middleware (global logger)
+
+
+// TODO:
+1. Module:
+Quan ly teacher: 
+QUan ly khoa hojc:1 teacher co nhieu khoa hoc, Khóa học thuộc thể loại nào, nhiều chương (chapter - text thôi)
+Quan ly cate
+Quan ly member: quản lý học viên, một hv register n course, 
+
+Vue
+Nest
+--
+Nâng cao: quiz
+
