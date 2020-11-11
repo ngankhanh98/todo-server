@@ -4,8 +4,9 @@ import { localDB, remoteDB } from '../config/database.config';
 export const databaseProvider = TypeOrmModule.forRootAsync({
   imports: [
     ConfigModule.forRoot({
-      // load: [localDB],
-      load: [remoteDB],
+      load: [localDB],
+      //TODO: switch to remoteDB before push master and deploy
+      // load: [remoteDB],
     }),
   ],
   inject: [ConfigService],

@@ -51,7 +51,7 @@ export class AuthController {
     description: exceptionMessage.USER_NOT_FOUND,
   })
   async login(@Body() req: authDTO) {
-    this.logger.debug(req);
+    this.logger.debug(req);    
     return await this.authService.login(req);
   }
 
